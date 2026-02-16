@@ -69,84 +69,98 @@ def delete_rezervace(rid):
     conn.close()
     load_today()
 
-# ---------- GUI (ZÁKLAD) ----------
+# ---------- GUI ----------
 
 root = tk.Tk()
 root.title("Správa sportoviště")
 root.geometry("1050x650")
+root.configure(bg="#e0f7fa")  # jemně modré pozadí
+
+# --- Styly ---
+style = ttk.Style(root)
+style.theme_use("clam")
+style.configure("Treeview", font=("Segoe UI", 10), rowheight=25, background="#ffffff",
+                fieldbackground="#f1f8e9")  # pastel zelená
+style.configure("Treeview.Heading", font=("Segoe UI", 11, "bold"), background="#00acc1", foreground="white")
+style.map("Treeview", background=[("selected", "#ffcc80")])  # zvýraznění vybrané řádky
+
+style.configure("TButton", font=("Segoe UI", 10), padding=5, background="#00acc1", foreground="white")
+style.map("TButton", background=[("active", "#26c6da")])
+
+style.configure("TLabel", font=("Segoe UI", 10), background="#e0f7fa")
 
 padx = 10
 pady = 5
 
-# ---- Sportoviště ----
-frame_s = ttk.LabelFrame(root, text="Přidat sportoviště")
+# ---- Sportoviště frame ----
+frame_s = ttk.LabelFrame(root, text="Přidat sportoviště", padding=(10,10))
 frame_s.pack(fill="x", padx=padx, pady=pady)
 
-tk.Label(frame_s, text="Název").grid(row=0, column=0)
-tk.Label(frame_s, text="Typ").grid(row=0, column=2)
-tk.Label(frame_s, text="Kapacita").grid(row=0, column=4)
+tk.Label(frame_s, text="Název").grid(row=0, column=0, sticky="w")
+tk.Label(frame_s, text="Typ").grid(row=0, column=2, sticky="w")
+tk.Label(frame_s, text="Kapacita").grid(row=0, column=4, sticky="w")
 
 nazev_e = tk.Entry(frame_s)
 typ_e = tk.Entry(frame_s)
 kap_e = tk.Entry(frame_s)
 
-nazev_e.grid(row=0, column=1)
-typ_e.grid(row=0, column=3)
-kap_e.grid(row=0, column=5)
+nazev_e.grid(row=0, column=1, padx=5)
+typ_e.grid(row=0, column=3, padx=5)
+kap_e.grid(row=0, column=5, padx=5)
 
 def gui_add_sport():
     if not kap_e.get().isdigit():
         messagebox.showerror("Chyba", "Kapacita musí být číslo")
         return
     add_sportoviste(nazev_e.get(), typ_e.get(), int(kap_e.get()))
+    messagebox.showinfo("OK", "Sportoviště přidáno")
     refresh_combo()
 
-tk.Button(frame_s, text="Přidat", command=gui_add_sport).grid(row=0, column=6)
+tk.Button(frame_s, text="Přidat", command=gui_add_sport).grid(row=0, column=6, padx=5)
 
-
-# ---- Uživatel ----
-frame_u = ttk.LabelFrame(root, text="Přidat uživatele")
+# ---- Uživatel frame ----
+frame_u = ttk.LabelFrame(root, text="Přidat uživatele", padding=(10,10))
 frame_u.pack(fill="x", padx=padx, pady=pady)
 
-tk.Label(frame_u, text="Jméno").grid(row=0, column=0)
-tk.Label(frame_u, text="Email").grid(row=0, column=2)
+tk.Label(frame_u, text="Jméno").grid(row=0, column=0, sticky="w")
+tk.Label(frame_u, text="Email").grid(row=0, column=2, sticky="w")
 
 jmeno_e = tk.Entry(frame_u)
 email_e = tk.Entry(frame_u)
 
-jmeno_e.grid(row=0, column=1)
-email_e.grid(row=0, column=3)
+jmeno_e.grid(row=0, column=1, padx=5)
+email_e.grid(row=0, column=3, padx=5)
 
 def gui_add_user():
     add_uzivatel(jmeno_e.get(), email_e.get())
+    messagebox.showinfo("OK", "Uživatel přidán")
     refresh_combo()
 
-tk.Button(frame_u, text="Přidat", command=gui_add_user).grid(row=0, column=4)
+tk.Button(frame_u, text="Přidat", command=gui_add_user).grid(row=0, column=4, padx=5)
 
-
-# ---- Rezervace ----
-frame_r = ttk.LabelFrame(root, text="Nová rezervace")
+# ---- Rezervace frame ----
+frame_r = ttk.LabelFrame(root, text="Nová rezervace", padding=(10,10))
 frame_r.pack(fill="x", padx=padx, pady=pady)
 
-tk.Label(frame_r, text="Datum YYYY-MM-DD").grid(row=0, column=0)
-tk.Label(frame_r, text="Od HH:MM").grid(row=0, column=2)
-tk.Label(frame_r, text="Do HH:MM").grid(row=0, column=4)
-tk.Label(frame_r, text="Sportoviště").grid(row=0, column=6)
-tk.Label(frame_r, text="Uživatel").grid(row=0, column=8)
+tk.Label(frame_r, text="Datum YYYY-MM-DD").grid(row=0, column=0, sticky="w")
+tk.Label(frame_r, text="Od HH:MM").grid(row=0, column=2, sticky="w")
+tk.Label(frame_r, text="Do HH:MM").grid(row=0, column=4, sticky="w")
+tk.Label(frame_r, text="Sportoviště").grid(row=0, column=6, sticky="w")
+tk.Label(frame_r, text="Uživatel").grid(row=0, column=8, sticky="w")
 
 datum_e = tk.Entry(frame_r)
 od_e = tk.Entry(frame_r)
 do_e = tk.Entry(frame_r)
 
-datum_e.grid(row=0, column=1)
-od_e.grid(row=0, column=3)
-do_e.grid(row=0, column=5)
+datum_e.grid(row=0, column=1, padx=5)
+od_e.grid(row=0, column=3, padx=5)
+do_e.grid(row=0, column=5, padx=5)
 
 sport_combo = ttk.Combobox(frame_r, width=15, state="readonly")
-sport_combo.grid(row=0, column=7)
+sport_combo.grid(row=0, column=7, padx=5)
 
 user_combo = ttk.Combobox(frame_r, width=15, state="readonly")
-user_combo.grid(row=0, column=9)
+user_combo.grid(row=0, column=9, padx=5)
 
 def refresh_combo():
     sport_data = get_sportoviste()
@@ -173,18 +187,20 @@ def gui_add_rez():
     uid = user_combo.get().split(" - ")[0]
     add_rezervace(datum_e.get(), od_e.get(), do_e.get(), sid, uid)
 
-tk.Button(frame_r, text="Rezervovat", command=gui_add_rez).grid(row=0, column=10)
+tk.Button(frame_r, text="Rezervovat", command=gui_add_rez).grid(row=0, column=10, padx=5)
 
-
-# ---- Treeview ----
-frame_t = ttk.LabelFrame(root, text="Přehled rezervací")
+# ---- Treeview denní přehled ----
+frame_t = ttk.LabelFrame(root, text="Denní přehled", padding=(10,10))
 frame_t.pack(fill="both", expand=True, padx=padx, pady=pady)
 
 tree = ttk.Treeview(frame_t, columns=("id", "datum", "od", "do", "sport", "uzivatel"), show="headings")
 for c in ("id", "datum", "od", "do", "sport", "uzivatel"):
     tree.heading(c, text=c)
+tree.pack(fill="both", expand=True, padx=5, pady=5)
 
-tree.pack(fill="both", expand=True)
+# Alternující barvy řádků
+tree.tag_configure('odd', background='#e1f5fe')  # světle modrá
+tree.tag_configure('even', background='#b2ebf2')  # tmavší modrá
 
 def load_today():
     conn = db.connect()
@@ -197,8 +213,9 @@ def load_today():
     """)
     for row in tree.get_children():
         tree.delete(row)
-    for row in cur.fetchall():
-        tree.insert("", "end", values=row)
+    for i, row in enumerate(cur.fetchall()):
+        tag = 'even' if i % 2 == 0 else 'odd'
+        tree.insert("", "end", values=row, tags=(tag,))
     conn.close()
 
 load_today()
